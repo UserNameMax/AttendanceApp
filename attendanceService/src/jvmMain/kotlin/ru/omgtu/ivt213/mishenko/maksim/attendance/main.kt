@@ -14,5 +14,9 @@ suspend fun main() {
     val attendanceRepository = YdbAttendanceRepository(sessionRetryContext)
     println(lessonRepository.getLessons())
     println(studentRepository.getStudents())
-    println(attendanceRepository.getAttendance())
+    try {
+        println(attendanceRepository.getAttendance().apply { attendanceRepository.addAttendance(first().copy(id = -1)) })
+    } catch (e:Exception){
+        println(e.message)
+    }
 }

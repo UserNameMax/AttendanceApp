@@ -5,12 +5,14 @@ import ru.omgtu.ivt213.mishenko.maksim.attendance.utils.executeResultQuery
 import tech.ydb.table.SessionRetryContext
 import tech.ydb.table.result.ResultSetReader
 import java.lang.IllegalArgumentException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class YdbAttendanceRepository(private val sessionRetryContext: SessionRetryContext) : AttendanceRepository {
     override suspend fun getAttendance(): List<Attendance> {
         val result = mutableListOf<Attendance>()
         sessionRetryContext.executeResultQuery(
-            "select attendance.id, attendance.`date`, lesson.name, student.id, student.name, `attendance-type`.name, teacher.name, `lesson-type`.name\n" +
+            "select attendance.id, attendance.`date`, lesson.id, lesson.name, student.id, student.name, `attendance-type`.name, teacher.name, `lesson-type`.name\n" +
                     "from attendance\n" +
                     "inner join lesson\n" +
                     "on lesson.id = attendance.lesson\n" +
@@ -28,6 +30,28 @@ class YdbAttendanceRepository(private val sessionRetryContext: SessionRetryConte
             }
         }
         return result
+    }
+
+    override suspend fun addAttendance(attendance: Attendance) {
+        val id = if (attendance.id <= 0) generateId() else attendance.id
+        val query =
+            "UPSERT INTO attendance (id,`date`, lesson, student, type) VALUES ($id, ${attendance.toQueryValues()})"
+        sessionRetryContext.executeResultQuery(query)
+    }
+
+    private fun generateId(): Int {
+        val query = "select * from attendance"
+        return sessionRetryContext.executeResultQuery(query).getRowCount(0) + 1
+    }
+
+    private fun Attendance.toQueryValues(): String {
+        return "${date.toQueryValues()}, ${lesson.id}, ${student.id}, ${type.id}"
+    }
+
+    private fun LocalDateTime.toQueryValues(): String {
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+        return "cast (\"${format(dateFormatter)}T${format(timeFormatter)}:00Z\" as datetime)"
     }
 
     private fun ResultSetReader.getAttendance() = Attendance(
@@ -49,6 +73,7 @@ class YdbAttendanceRepository(private val sessionRetryContext: SessionRetryConte
 
     private fun ResultSetReader.getLesson() =
         Lesson(
+            id = getColumn("lesson.id").uint64.toInt(),
             name = getColumn("lesson.name").text,
             teacher = getColumn("teacher.name").text,
             type = try {

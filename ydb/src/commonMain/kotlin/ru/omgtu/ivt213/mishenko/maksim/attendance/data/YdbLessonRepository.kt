@@ -11,7 +11,7 @@ class YdbLessonRepository(private val sessionRetryContext: SessionRetryContext) 
     override suspend fun getLessons(): List<Lesson> {
         val result = mutableListOf<Lesson>()
         sessionRetryContext.executeResultQuery(
-            "select lesson.name, teacher.name, `lesson-type.name` from lesson\n" +
+            "select lesson.id, lesson.name, teacher.name, `lesson-type.name` from lesson\n" +
                     "inner join teacher\n" +
                     "on teacher.id = lesson.teacher\n" +
                     "inner join `lesson-type`\n" +
@@ -26,6 +26,7 @@ class YdbLessonRepository(private val sessionRetryContext: SessionRetryContext) 
 
     private fun ResultSetReader.getLesson() =
         Lesson(
+            id = getColumn("lesson.id").uint64.toInt(),
             name = getColumn("lesson.name").text,
             teacher = getColumn("teacher.name").text,
             type = try {
