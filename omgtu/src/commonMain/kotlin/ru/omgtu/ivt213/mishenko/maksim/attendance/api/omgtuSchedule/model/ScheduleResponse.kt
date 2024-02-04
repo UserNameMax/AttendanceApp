@@ -3,6 +3,8 @@ package ru.omgtu.ivt213.mishenko.maksim.attendance.api.omgtuSchedule.model
 import kotlinx.serialization.Serializable
 import ru.omgtu.ivt213.mishenko.maksim.attendance.api.omgtuSchedule.model.Groups
 import ru.omgtu.ivt213.mishenko.maksim.attendance.api.omgtuSchedule.model.OfLecturers
+import ru.omgtu.ivt213.mishenko.maksim.attendance.model.Lesson
+import ru.omgtu.ivt213.mishenko.maksim.attendance.model.LessonType
 
 @Serializable
 data class ScheduleResponse(
@@ -78,4 +80,16 @@ data class ScheduleResponse(
     val url1_description: String,
     val url2: String,
     val url2_description: String
-)
+) {
+    fun toLesson(): Lesson =
+        Lesson(id = -1, name = discipline, teacher = lecturer, type = getLessonType())
+
+    fun getLessonType(): LessonType {
+        return when (kindOfWork) {
+            "Лекция" -> LessonType.LECTION
+            "Лабораторные работы" -> LessonType.LABS
+            "Практические занятия" -> LessonType.PRACTICAL
+            else -> LessonType.UNKNOW
+        }
+    }
+}

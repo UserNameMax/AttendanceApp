@@ -84,7 +84,7 @@ class OmgtuAttendanceRepository(private val capitanApi: OmgtuCapitanApi) : Atten
                 name = lesson.name,
                 groupType = "",
                 lessonType = lesson.type.toDto(),
-                teacher = lesson.teacher,
+                teacher = lesson.teacher.removeRank(),
                 time = date.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"))
             )
         )
@@ -98,5 +98,11 @@ class OmgtuAttendanceRepository(private val capitanApi: OmgtuCapitanApi) : Atten
             UNKNOW -> ""
         }
     }
+
+    private fun String.removeRank(): String =
+        replace("ст.пр. ", "")
+            .replace("асс. ", "")
+            .replace("доц., к.н. ", "")
+            .replace("проф., к.н. ", "")
 }
 

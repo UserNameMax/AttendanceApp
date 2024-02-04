@@ -36,7 +36,7 @@ class YdbAttendanceRepository(private val sessionRetryContext: SessionRetryConte
     override suspend fun addAttendance(attendance: Attendance) {
         val id = if (attendance.id <= 0) generateId() else attendance.id
         val query =
-            "UPSERT INTO attendance (id,`date`, lesson, student, type) VALUES ($id, ${attendance.toQueryValues()})"
+            "UPSERT INTO attendance (id,`date`, lesson, student, type, is_saved) VALUES ($id, ${attendance.toQueryValues()}, false)"
         sessionRetryContext.executeQuery(query)
     }
 

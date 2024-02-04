@@ -4,6 +4,7 @@ import ru.omgtu.ivt213.mishenko.maksim.attendance.api.omgtuSchedule.OmgtuSchedul
 import ru.omgtu.ivt213.mishenko.maksim.attendance.api.omgtuSchedule.model.ScheduleResponse
 import ru.omgtu.ivt213.mishenko.maksim.attendance.model.Lesson
 import ru.omgtu.ivt213.mishenko.maksim.attendance.model.LessonType
+import java.lang.UnsupportedOperationException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -17,15 +18,7 @@ class OmgtuLessonRepository(private val omgtuScheduleApi: OmgtuScheduleApi) : Le
         return schedule.map { it.toLesson() }.distinct()
     }
 
-    private fun ScheduleResponse.toLesson(): Lesson =
-        Lesson(id = -1, name = discipline, teacher = lecturer, type = getLessonType())
-
-    private fun ScheduleResponse.getLessonType(): LessonType {
-        return when (kindOfWork) {
-            "Лекция" -> LessonType.LECTION
-            "Лабораторные работы" -> LessonType.LABS
-            "Практические занятия" -> LessonType.PRACTICAL
-            else -> LessonType.UNKNOW
-        }
+    override suspend fun addLessons(lessons: List<Lesson>) {
+        throw UnsupportedOperationException("Omgtu api not support create operations")
     }
 }

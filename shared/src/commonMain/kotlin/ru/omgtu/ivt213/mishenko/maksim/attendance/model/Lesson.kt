@@ -5,4 +5,6 @@ data class Lesson(
     val name: String,
     val teacher: String,
     val type: LessonType
-)
+) {
+    companion object
+}

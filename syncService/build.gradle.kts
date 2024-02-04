@@ -6,6 +6,8 @@ plugins {
     kotlin("multiplatform") version "1.9.0"
 }
 
+val koin_version = "3.5.3"
+
 kotlin {
     jvm{}
     sourceSets {
@@ -14,6 +16,7 @@ kotlin {
                 implementation(project(":shared"))
                 implementation(project(":ydb"))
                 implementation(project(":omgtu"))
+                implementation("io.insert-koin:koin-core:$koin_version")
             }
         }
     }

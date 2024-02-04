@@ -13,6 +13,7 @@ kotlin {
             dependencies {
                 implementation(project(":shared"))
                 implementation(project(":ydb"))
+                implementation(project(":omgtu"))
             }
         }
     }

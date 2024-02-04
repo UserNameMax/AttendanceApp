@@ -16,6 +16,15 @@ class YdbStudentRepository(private val sessionRetryContext: SessionRetryContext)
         return result
     }
 
+    override suspend fun addStudents(students: List<Student>) {
+        val id = getStudents().maxBy { it.id }.id + 1
+        students.forEachIndexed() { index, student -> addStudent(student = student.copy(id + index)) }
+    }
+
+    fun addStudent(student: Student) {
+        sessionRetryContext.executeQuery("UPSERT INTO `student` ( `id`, `name` ) VALUES (${student.id}, \"${student.name}\");")
+    }
+
     private fun ResultSetReader.getStudent() = Student(
         id = getColumn("id").uint64.toInt(),
         name = getColumn("name").text
