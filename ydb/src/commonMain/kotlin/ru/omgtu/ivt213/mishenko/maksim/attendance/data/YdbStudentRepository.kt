@@ -1,14 +1,14 @@
 package ru.omgtu.ivt213.mishenko.maksim.attendance.data
 
 import ru.omgtu.ivt213.mishenko.maksim.attendance.model.Student
-import ru.omgtu.ivt213.mishenko.maksim.attendance.utils.executeResultQuery
+import ru.omgtu.ivt213.mishenko.maksim.attendance.utils.executeQuery
 import tech.ydb.table.SessionRetryContext
 import tech.ydb.table.result.ResultSetReader
 
 class YdbStudentRepository(private val sessionRetryContext: SessionRetryContext) : StudentRepository {
     override suspend fun getStudents(): List<Student> {
         val result = mutableListOf<Student>()
-        sessionRetryContext.executeResultQuery("select * from student").getResultSet(0).apply {
+        sessionRetryContext.executeQuery("select * from student").getResultSet(0).apply {
             while (next()) {
                 result.add(getStudent())
             }

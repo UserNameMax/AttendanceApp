@@ -1,17 +1,18 @@
 package ru.omgtu.ivt213.mishenko.maksim.attendance.data
 
 import ru.omgtu.ivt213.mishenko.maksim.attendance.model.*
-import ru.omgtu.ivt213.mishenko.maksim.attendance.utils.executeResultQuery
+import ru.omgtu.ivt213.mishenko.maksim.attendance.utils.executeQuery
 import tech.ydb.table.SessionRetryContext
 import tech.ydb.table.result.ResultSetReader
 import java.lang.IllegalArgumentException
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class YdbAttendanceRepository(private val sessionRetryContext: SessionRetryContext) : AttendanceRepository {
-    override suspend fun getAttendance(): List<Attendance> {
+    override suspend fun getAttendance(start: LocalDate, finish: LocalDate): List<Attendance> {
         val result = mutableListOf<Attendance>()
-        sessionRetryContext.executeResultQuery(
+        sessionRetryContext.executeQuery(
             "select attendance.id, attendance.`date`, lesson.id, lesson.name, student.id, student.name, `attendance-type`.name, teacher.name, `lesson-type`.name\n" +
                     "from attendance\n" +
                     "inner join lesson\n" +
@@ -29,19 +30,23 @@ class YdbAttendanceRepository(private val sessionRetryContext: SessionRetryConte
                 result.add(getAttendance())
             }
         }
-        return result
+        return result.filter { it.date.toLocalDate() >= start && it.date.toLocalDate() <= finish }
     }
 
     override suspend fun addAttendance(attendance: Attendance) {
         val id = if (attendance.id <= 0) generateId() else attendance.id
         val query =
             "UPSERT INTO attendance (id,`date`, lesson, student, type) VALUES ($id, ${attendance.toQueryValues()})"
-        sessionRetryContext.executeResultQuery(query)
+        sessionRetryContext.executeQuery(query)
+    }
+
+    override suspend fun addAttendance(attendance: List<Attendance>) {
+        attendance.forEach { addAttendance(it) }
     }
 
     private fun generateId(): Int {
         val query = "select * from attendance"
-        return sessionRetryContext.executeResultQuery(query).getRowCount(0) + 1
+        return sessionRetryContext.executeQuery(query).getRowCount(0) + 1
     }
 
     private fun Attendance.toQueryValues(): String {

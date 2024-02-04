@@ -13,3 +13,5 @@ rootProject.name = "attendance"
 include("shared")
 include("ydb")
 include("attendanceService")
+include("syncService")
+include("omgtu")
