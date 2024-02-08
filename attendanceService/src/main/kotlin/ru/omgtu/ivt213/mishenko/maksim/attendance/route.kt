@@ -33,7 +33,7 @@ fun Application.routes() {
             }
         }
         saveGet("/lesson") {
-            call.respond(lessonRepository.getLessons().map { it.toDto().apply { println(it) } })
+            call.respond(lessonRepository.getLessons().map { it.toDto() })
         }
         saveGet("/student") {
             call.respond(studentRepository.getStudents().map { it.toDto() })

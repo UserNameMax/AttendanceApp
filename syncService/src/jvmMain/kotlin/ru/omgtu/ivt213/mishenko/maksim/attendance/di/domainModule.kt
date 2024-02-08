@@ -6,7 +6,7 @@ import ru.omgtu.ivt213.mishenko.maksim.attendance.data.*
 import tech.ydb.core.impl.YdbSchedulerFactory
 import java.time.LocalDate
 
-fun domainModule() = module {
+val domainModule = module {
     factory<StudentRepository>(named("omgtu")) {
         OmgtuStudentRepository(capitanApi = get()).apply {
             day = LocalDate.of(2024, 2, 3) //TODO

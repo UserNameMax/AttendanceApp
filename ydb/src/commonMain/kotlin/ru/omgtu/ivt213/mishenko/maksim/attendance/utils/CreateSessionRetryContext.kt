@@ -6,7 +6,7 @@ import tech.ydb.table.SessionRetryContext
 import tech.ydb.table.TableClient
 
 fun createSessionRetryContext(authorizedKeyJson: String, connectionString: String): SessionRetryContext {
-    val transport =
+    val transport: GrpcTransport =
         GrpcTransport.forConnectionString(connectionString)
             .withAuthProvider(CloudAuthHelper.getServiceAccountJsonAuthProvider(authorizedKeyJson))
             .build()
