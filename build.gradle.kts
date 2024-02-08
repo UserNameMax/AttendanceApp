@@ -1,13 +1,19 @@
 plugins {
     kotlin("multiplatform") version "1.9.0"
     kotlin("plugin.serialization") version "1.8.10"
+    //kotlin("android") apply false
+    kotlin("android") version "1.9.22" apply false
+    id("com.android.application") version "8.1.0" apply false
 }
 
 group = "ru.omgtu.ivt213.mishenko.maksim"
 version = "1.0-SNAPSHOT"
 
 repositories {
+    gradlePluginPortal()
     mavenCentral()
+    google()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
 kotlin {
