@@ -27,17 +27,35 @@ class AttendanceScreenComponent(
     val state = mutableState.asStateFlow()
 
     fun load(scope: CoroutineScope) = scope.launch {
-        val students = studentRepository.getStudents()
-        val schedule = scheduleRepository.getSchedule(start = LocalDate.of(2024, 1, 1), finish = LocalDate.now())
-        val attendance = attendanceRepository.getAttendance(start = LocalDate.of(2024, 1, 1), finish = LocalDate.now())
         mutableState.update {
             it.copy(
-                students = students,
-                schedule = schedule,
-                attendance = attendance,
-                isData = true
+                isData = false,
+                isError = false
             )
         }
+        try {
+            val students = studentRepository.getStudents()
+            val schedule = scheduleRepository.getSchedule(start = LocalDate.of(2024, 1, 1), finish = LocalDate.now())
+            val attendance =
+                attendanceRepository.getAttendance(start = LocalDate.of(2024, 1, 1), finish = LocalDate.now())
+            mutableState.update {
+                it.copy(
+                    students = students,
+                    schedule = schedule,
+                    attendance = attendance,
+                    isData = true,
+                    isError = false
+                )
+            }
+        } catch (e: Throwable) {
+            mutableState.update {
+                it.copy(
+                    isData = false,
+                    isError = true
+                )
+            }
+        }
+
     }
 
     fun changeAttendance(
@@ -54,17 +72,17 @@ class AttendanceScreenComponent(
             lesson = scheduleItem.lesson,
             date = scheduleItem.date
         )
+        val original = mutableState.value.attendance
         mutableState.update {
-            it.copy(attendance = it.attendance + trueAttendance)
+            it.copy(attendance = it.attendance + trueAttendance - (attendance?.run { listOf(this) }
+                ?: listOf()).toSet())
         }
-        attendanceRepository.addAttendance(trueAttendance)
-        mutableState.update {
-            it.copy(
-                attendance = attendanceRepository.getAttendance(
-                    start = LocalDate.of(2024, 1, 1),
-                    finish = LocalDate.now()
-                )
-            )
+        try {
+            attendanceRepository.addAttendance(trueAttendance)
+        } catch (e: Throwable) {
+            mutableState.update {
+                it.copy(attendance = original)
+            }
         }
     }
 }
