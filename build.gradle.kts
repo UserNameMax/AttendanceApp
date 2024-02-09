@@ -4,6 +4,7 @@ plugins {
     //kotlin("android") apply false
     kotlin("android") version "1.9.22" apply false
     id("com.android.application") version "8.1.0" apply false
+    id("com.github.gmazzo.buildconfig") version "5.3.5"
 }
 
 group = "ru.omgtu.ivt213.mishenko.maksim"

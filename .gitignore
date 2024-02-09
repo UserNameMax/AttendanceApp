@@ -42,3 +42,6 @@ bin/
 .DS_Store
 /.idea/
 /chromedriver
+/build.gradle.kts
+/local.properties
+*.hprof

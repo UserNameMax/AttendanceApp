@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 repositories {
     gradlePluginPortal()
     mavenCentral()
@@ -11,6 +13,7 @@ plugins {
     id("kotlinx-serialization")
     kotlin("android") version "1.9.22" apply false
     id("com.android.application") version "8.1.0"
+    id("com.github.gmazzo.buildconfig")
 }
 
 val ktorVersion = "2.3.8"
@@ -41,6 +44,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging:$ktorVersion")
+                implementation("io.ktor:ktor-client-auth:$ktorVersion")
 
                 implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
                 implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
@@ -85,4 +89,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+}
+
+buildConfig {
+    className("AppConfig")
+    packageName("ru.omgtu.ivt213.mishenko.maksim.attendance")
+    buildConfigField("apikey", gradleLocalProperties(rootDir).getProperty("apikey"))
 }
