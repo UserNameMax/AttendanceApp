@@ -52,6 +52,8 @@ kotlin {
 
                 implementation("io.insert-koin:koin-core:$koinVersion")
                 implementation("io.insert-koin:koin-compose:3.6.0-alpha1")
+
+                implementation("org.slf4j:slf4j-api:2.0.10")
             }
         }
         val jvmMain by getting{
@@ -102,9 +104,9 @@ compose.desktop {
     application {
         mainClass = "AttendanceAppKt"
         nativeDistributions {
-            targetFormats(TargetFormat.Exe, TargetFormat.Deb)
+            targetFormats(TargetFormat.Exe)
             packageName = "demo"
-            packageVersion = "0.0.1"
+            packageVersion = "1.0.0"
         }
     }
 }
