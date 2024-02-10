@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 repositories {
     gradlePluginPortal()
@@ -8,7 +9,7 @@ repositories {
 }
 
 plugins {
-    kotlin("multiplatform") version "1.9.0"
+    kotlin("multiplatform") version "1.9.22"
     id("org.jetbrains.compose") version "1.5.12"
     id("kotlinx-serialization")
     kotlin("android") version "1.9.22" apply false
@@ -95,4 +96,15 @@ buildConfig {
     className("AppConfig")
     packageName("ru.omgtu.ivt213.mishenko.maksim.attendance")
     buildConfigField("apikey", gradleLocalProperties(rootDir).getProperty("apikey"))
+}
+
+compose.desktop {
+    application {
+        mainClass = "AttendanceAppKt"
+        nativeDistributions {
+            targetFormats(TargetFormat.Exe, TargetFormat.Deb)
+            packageName = "demo"
+            packageVersion = "0.0.1"
+        }
+    }
 }

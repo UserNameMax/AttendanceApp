@@ -1,10 +1,11 @@
 plugins {
-    kotlin("multiplatform") version "1.9.0"
-    kotlin("plugin.serialization") version "1.8.10"
+    kotlin("multiplatform") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
     //kotlin("android") apply false
     kotlin("android") version "1.9.22" apply false
     id("com.android.application") version "8.1.0" apply false
     id("com.github.gmazzo.buildconfig") version "5.3.5"
+    id("org.jetbrains.compose") version "1.5.12"
 }
 
 group = "ru.omgtu.ivt213.mishenko.maksim"

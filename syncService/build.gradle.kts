@@ -3,7 +3,7 @@ repositories {
 }
 
 plugins {
-    kotlin("multiplatform") version "1.9.0"
+    kotlin("multiplatform") version "1.9.22"
 }
 
 val koin_version = "3.5.3"
