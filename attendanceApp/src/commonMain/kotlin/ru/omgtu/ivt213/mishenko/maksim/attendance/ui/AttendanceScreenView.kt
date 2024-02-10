@@ -68,9 +68,10 @@ fun AttendanceScreenView(
 ) {
     val rowScrollState = rememberScrollState()
     val lessonWidth = 200.dp
+    val nameWidth = 150.dp
     Column() {
         Row {
-            Text(modifier = Modifier.width(300.dp), text = "text")
+            Text(modifier = Modifier.width(nameWidth), text = "text")
             Row(modifier = Modifier.horizontalScroll(rowScrollState)) {
                 for (columnIndex in 1..schedule.size) {
                     Column {
@@ -98,7 +99,7 @@ fun AttendanceScreenView(
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             for (rowIndex in 1..students.size) {
                 Row(modifier = Modifier.border(width = 1.dp, color = Color.Black)) {
-                    Text(modifier = Modifier.width(300.dp), text = students[rowIndex - 1].name)
+                    Text(modifier = Modifier.width(nameWidth), text = students[rowIndex - 1].name.replaceFirst(" ","\n"))
                     Row(modifier = Modifier.horizontalScroll(rowScrollState)) {
                         for (columnIndex in 1..schedule.size) {
                             val student = students[rowIndex - 1]
