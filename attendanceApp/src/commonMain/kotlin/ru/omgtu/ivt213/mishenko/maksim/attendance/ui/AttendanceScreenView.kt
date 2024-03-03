@@ -4,6 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -71,7 +72,7 @@ fun AttendanceScreenView(
     val nameWidth = 150.dp
     Column() {
         Row {
-            Text(modifier = Modifier.width(nameWidth), text = "text")
+            Spacer(modifier = Modifier.width(nameWidth))
             Row(modifier = Modifier.horizontalScroll(rowScrollState)) {
                 for (columnIndex in 1..schedule.size) {
                     Column {
@@ -99,7 +100,10 @@ fun AttendanceScreenView(
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             for (rowIndex in 1..students.size) {
                 Row(modifier = Modifier.border(width = 1.dp, color = Color.Black)) {
-                    Text(modifier = Modifier.width(nameWidth), text = students[rowIndex - 1].name.replaceFirst(" ","\n"))
+                    Text(
+                        modifier = Modifier.width(nameWidth),
+                        text = students[rowIndex - 1].name.replaceFirst(" ", "\n")
+                    )
                     Row(modifier = Modifier.horizontalScroll(rowScrollState)) {
                         for (columnIndex in 1..schedule.size) {
                             val student = students[rowIndex - 1]
