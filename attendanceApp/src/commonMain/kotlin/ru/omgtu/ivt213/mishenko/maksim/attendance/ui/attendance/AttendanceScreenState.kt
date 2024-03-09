@@ -1,4 +1,4 @@
-package ru.omgtu.ivt213.mishenko.maksim.attendance.ui
+package ru.omgtu.ivt213.mishenko.maksim.attendance.ui.attendance
 
 import ru.omgtu.ivt213.mishenko.maksim.attendance.model.Attendance
 import ru.omgtu.ivt213.mishenko.maksim.attendance.model.ScheduleItem

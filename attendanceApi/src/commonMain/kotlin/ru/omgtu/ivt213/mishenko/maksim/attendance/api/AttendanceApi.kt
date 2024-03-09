@@ -12,4 +12,5 @@ interface AttendanceApi {
     suspend fun getSchedule(start: LocalDate, finish: LocalDate): List<ScheduleItemDto>
     suspend fun getAttendance(start: LocalDate, finish: LocalDate): List<AttendanceDto>
     suspend fun addAttendance(attendanceDto: AttendanceDto)
+    suspend fun auth(login: String, password: String?): AuthRespond
 }

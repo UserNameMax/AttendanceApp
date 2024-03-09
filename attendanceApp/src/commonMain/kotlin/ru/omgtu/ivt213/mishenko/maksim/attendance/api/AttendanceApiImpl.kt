@@ -39,4 +39,22 @@ class AttendanceApiImpl(private val client: HttpClient, private val baseUrl: Str
             setBody(attendanceDto)
         }
     }
+
+    override suspend fun auth(login: String, password: String?) =
+        client.get("$baseUrl/auth") {
+            url {
+                parameters.append("login", login)
+                if (password != null) {
+                    parameters.append("password", password)
+                }
+            }
+        }.run {
+            when (status) {
+                HttpStatusCode.NotFound -> AuthRespond.UserNotFound
+                HttpStatusCode.PaymentRequired -> AuthRespond.NeedPassword
+                HttpStatusCode.BadRequest -> AuthRespond.IncorrectPassword
+                HttpStatusCode.OK -> AuthRespond.Success(bodyAsText())
+                else -> throw Exception("Unknown status: ${status.value}: ${status.description}")
+            }
+        }
 }

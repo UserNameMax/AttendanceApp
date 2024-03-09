@@ -5,7 +5,8 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetbrains.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import di.initDi
-import ru.omgtu.ivt213.mishenko.maksim.attendance.ui.AttendanceScreenView
+import ru.omgtu.ivt213.mishenko.maksim.attendance.ui.navigation.NavRoot
+import ru.omgtu.ivt213.mishenko.maksim.attendance.ui.navigation.NavView
 import javax.swing.SwingUtilities
 
 @OptIn(ExperimentalDecomposeApi::class)
@@ -18,7 +19,7 @@ fun main() {
         title = "title",
     ) {
         LifecycleController(lifecycle, windowState)
-        AttendanceScreenView()
+        NavView(NavRoot(DefaultComponentContext(lifecycle)))
     }
 }
 

@@ -8,14 +8,16 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
 import org.koin.dsl.module
-import ru.omgtu.ivt213.mishenko.maksim.attendance.AppConfig
 import ru.omgtu.ivt213.mishenko.maksim.attendance.api.AttendanceApi
 import ru.omgtu.ivt213.mishenko.maksim.attendance.api.AttendanceApiImpl
+import ru.omgtu.ivt213.mishenko.maksim.attendance.data.TokenStorage
 
 val dataModule = module {
-    single<AttendanceApi> {
+    val tokenStorage = TokenStorage()
+    single { tokenStorage }
+    factory<AttendanceApi> {
         AttendanceApiImpl(
-            client = httpClient(AppConfig.apikey),
+            client = httpClient(tokenStorage.token),
             baseUrl = "https://d5d0dv0bdev4ofgma92d.apigw.yandexcloud.net"
         )
     }

@@ -1,4 +1,4 @@
-package ru.omgtu.ivt213.mishenko.maksim.attendance.ui
+package ru.omgtu.ivt213.mishenko.maksim.attendance.ui.attendance
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll

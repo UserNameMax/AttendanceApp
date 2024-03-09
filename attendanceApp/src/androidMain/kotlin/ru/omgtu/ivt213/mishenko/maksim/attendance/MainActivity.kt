@@ -5,7 +5,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import com.arkivanov.decompose.defaultComponentContext
 import ru.omgtu.ivt213.mishenko.maksim.attendance.di.initDi
-import ru.omgtu.ivt213.mishenko.maksim.attendance.ui.AttendanceScreenView
+import ru.omgtu.ivt213.mishenko.maksim.attendance.ui.attendance.AttendanceScreenView
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
