@@ -1,6 +1,7 @@
 package ru.omgtu.ivt213.mishenko.maksim.attendance.ui.auth
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
@@ -12,6 +13,7 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun AuthScreen(authComponent: AuthComponent) {
@@ -41,16 +43,17 @@ fun AuthScreen(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Column {
-                Row {
+            Column(Modifier.width(IntrinsicSize.Min).animateContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("Name")
-                    Column {
+                    Spacer(Modifier.width(10.dp))
+                    Column(Modifier.fillMaxWidth()) {
                         var selectName by remember { mutableStateOf("") }
                         var expanded by remember { mutableStateOf(false) }
                         TextField(
                             value = selectName,
                             onValueChange = { selectName = it },
-                            modifier = Modifier.clickable { expanded = !expanded },
+                            modifier = Modifier.clickable { expanded = !expanded }.fillMaxWidth(),
                             enabled = false,
                             readOnly = true
                         )
@@ -68,9 +71,11 @@ fun AuthScreen(
 
                     }
                 }
+                Spacer(Modifier.height(10.dp))
                 if (showPassword) {
-                    Row {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("Password")
+                        Spacer(Modifier.width(10.dp))
                         var password by remember { mutableStateOf("") }
                         TextField(
                             value = password,
@@ -81,6 +86,7 @@ fun AuthScreen(
                             enabled = !isLoading
                         )
                     }
+                    Spacer(Modifier.height(10.dp))
                 }
                 Button(onLogIn) { Text("Log in") }
             }

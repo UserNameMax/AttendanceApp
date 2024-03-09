@@ -7,13 +7,12 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import di.initDi
 import ru.omgtu.ivt213.mishenko.maksim.attendance.ui.navigation.NavRoot
 import ru.omgtu.ivt213.mishenko.maksim.attendance.ui.navigation.NavView
-import javax.swing.SwingUtilities
 
 @OptIn(ExperimentalDecomposeApi::class)
 fun main() {
     val windowState = WindowState()
     val lifecycle = LifecycleRegistry()
-    initDi(DefaultComponentContext(lifecycle))
+    initDi()
     singleWindowApplication(
         state = windowState,
         title = "title",
@@ -21,10 +20,4 @@ fun main() {
         LifecycleController(lifecycle, windowState)
         NavView(NavRoot(DefaultComponentContext(lifecycle)))
     }
-}
-
-private inline fun <T : Any> runOnMainThreadBlocking(crossinline block: () -> T): T {
-    lateinit var result: T
-    SwingUtilities.invokeAndWait { result = block() }
-    return result
 }

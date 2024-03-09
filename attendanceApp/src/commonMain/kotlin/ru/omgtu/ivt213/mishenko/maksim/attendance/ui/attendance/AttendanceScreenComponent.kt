@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import ru.omgtu.ivt213.mishenko.maksim.attendance.data.AttendanceRepository
-import ru.omgtu.ivt213.mishenko.maksim.attendance.data.LessonRepository
 import ru.omgtu.ivt213.mishenko.maksim.attendance.data.ScheduleRepository
 import ru.omgtu.ivt213.mishenko.maksim.attendance.data.StudentRepository
 import ru.omgtu.ivt213.mishenko.maksim.attendance.model.Attendance
@@ -22,7 +21,6 @@ class AttendanceScreenComponent(componentContext: ComponentContext) : ComponentC
     KoinComponent {
 
     private val attendanceRepository: AttendanceRepository by inject()
-    private val lessonRepository: LessonRepository by inject()
     private val scheduleRepository: ScheduleRepository by inject()
     private val studentRepository: StudentRepository by inject()
 

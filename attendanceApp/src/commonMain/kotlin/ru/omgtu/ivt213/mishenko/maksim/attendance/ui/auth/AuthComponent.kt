@@ -12,6 +12,7 @@ import org.koin.core.component.inject
 import ru.omgtu.ivt213.mishenko.maksim.attendance.api.AuthRespond
 import ru.omgtu.ivt213.mishenko.maksim.attendance.data.StudentRepository
 import ru.omgtu.ivt213.mishenko.maksim.attendance.useCase.AuthUseCase
+import ru.omgtu.ivt213.mishenko.maksim.attendance.utils.UI
 
 class AuthComponent(componentContext: ComponentContext, private val onSuccess: () -> Unit) :
     ComponentContext by componentContext,
@@ -19,7 +20,7 @@ class AuthComponent(componentContext: ComponentContext, private val onSuccess: (
     private val authUseCase: AuthUseCase by inject()
     private val studentRepository: StudentRepository by inject()
     private val mutableState = MutableStateFlow(AuthState.default)
-    private val scope = CoroutineScope(Dispatchers.Main)
+    private val scope = CoroutineScope(Dispatchers.UI)
     val state = mutableState.asStateFlow()
 
     init {
