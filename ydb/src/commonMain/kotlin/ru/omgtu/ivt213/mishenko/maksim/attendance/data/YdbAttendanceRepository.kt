@@ -4,7 +4,6 @@ import ru.omgtu.ivt213.mishenko.maksim.attendance.model.*
 import ru.omgtu.ivt213.mishenko.maksim.attendance.utils.executeQuery
 import tech.ydb.table.SessionRetryContext
 import tech.ydb.table.result.ResultSetReader
-import java.lang.IllegalArgumentException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -46,7 +45,14 @@ class YdbAttendanceRepository(private val sessionRetryContext: SessionRetryConte
 
     private fun generateId(): Int {
         val query = "select * from attendance"
-        return sessionRetryContext.executeQuery(query).getRowCount(0) + 1
+        return sessionRetryContext.executeQuery(query).getResultSet(0).run {
+            var max = getColumn("id").uint64
+            while (next()) {
+                val value = getColumn("id").uint64
+                if (value > max) max = value
+            }
+            max.toInt() + 1
+        }
     }
 
     private fun Attendance.toQueryValues(): String {
