@@ -60,10 +60,11 @@ fun Application.routes() {
                 savePost {
                     if (call.principal<UserIdPrincipal>()?.name != "capitan") {
                         call.respond(HttpStatusCode.Forbidden)
+                    } else {
+                        val attendance = call.receive<AttendanceDto>().toAttendance()
+                        attendanceRepository.addAttendance(attendance)
+                        call.respond(HttpStatusCode.OK)
                     }
-                    val attendance = call.receive<AttendanceDto>().toAttendance()
-                    attendanceRepository.addAttendance(attendance)
-                    call.respond(HttpStatusCode.OK)
                 }
             }
         }

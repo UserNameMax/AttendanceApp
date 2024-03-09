@@ -37,6 +37,10 @@ class AttendanceApiImpl(private val client: HttpClient, private val baseUrl: Str
         client.post("$baseUrl/attendance") {
             contentType(ContentType.Application.Json)
             setBody(attendanceDto)
+        }.apply {
+            when(status){
+                HttpStatusCode.Forbidden -> throw Exception("Permission denied")
+            }
         }
     }
 
