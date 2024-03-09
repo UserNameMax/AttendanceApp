@@ -33,7 +33,7 @@ private fun httpClient(token: String) = HttpClient(CIO) {
                 println("ktorClient: $message")
             }
         }
-        level = LogLevel.HEADERS
+        level = LogLevel.ALL
     }
     install(Auth) {
         bearer {

@@ -19,7 +19,7 @@ class AuthComponent(componentContext: ComponentContext, private val onSuccess: (
     private val authUseCase: AuthUseCase by inject()
     private val studentRepository: StudentRepository by inject()
     private val mutableState = MutableStateFlow(AuthState.default)
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = CoroutineScope(Dispatchers.Main)
     val state = mutableState.asStateFlow()
 
     init {

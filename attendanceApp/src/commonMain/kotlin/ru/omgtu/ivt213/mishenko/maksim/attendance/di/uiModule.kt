@@ -1,11 +1,10 @@
 package ru.omgtu.ivt213.mishenko.maksim.attendance.di
 
-import com.arkivanov.decompose.ComponentContext
 import org.koin.dsl.module
 import ru.omgtu.ivt213.mishenko.maksim.attendance.data.*
 import ru.omgtu.ivt213.mishenko.maksim.attendance.useCase.AuthUseCase
 
-fun uiModule(componentContext: ComponentContext) = module {
+fun uiModule() = module {
     factory<AttendanceRepository> { ApiAttendanceRepository(get()) }
     factory<LessonRepository> { ApiLessonRepository(get()) }
     factory<ScheduleRepository> { ApiScheduleRepository(get()) }
