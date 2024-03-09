@@ -15,6 +15,10 @@ import ru.omgtu.ivt213.mishenko.maksim.attendance.dto.AttendanceDto.Companion.to
 import ru.omgtu.ivt213.mishenko.maksim.attendance.dto.LessonDto.Companion.toDto
 import ru.omgtu.ivt213.mishenko.maksim.attendance.dto.ScheduleItemDto.Companion.toDto
 import ru.omgtu.ivt213.mishenko.maksim.attendance.dto.StudentDto.Companion.toDto
+import ru.omgtu.ivt213.mishenko.maksim.attendance.exception.PasswordException
+import ru.omgtu.ivt213.mishenko.maksim.attendance.exception.RequiredPasswordException
+import ru.omgtu.ivt213.mishenko.maksim.attendance.exception.UserNotFoundException
+import ru.omgtu.ivt213.mishenko.maksim.attendance.useCase.AuthUseCase
 import ru.omgtu.ivt213.mishenko.maksim.attendance.useCase.ScheduleUseCase
 import ru.omgtu.ivt213.mishenko.maksim.attendance.utils.DateTimeConverter.getLocalDate
 import ru.omgtu.ivt213.mishenko.maksim.attendance.utils.saveGet
@@ -25,7 +29,11 @@ fun Application.routes() {
     val lessonRepository: LessonRepository by inject()
     val studentRepository: StudentRepository by inject()
     val attendanceRepository: AttendanceRepository by inject()
+    val authUseCase: AuthUseCase by inject()
     routing {
+        saveGet("/student") {
+            call.respond(studentRepository.getStudents().map { it.toDto() })
+        }
         authenticate("auth-bearer") {
             saveGet("/schedule") {
                 val start = call.request.queryParameters["start"]?.getLocalDate()
@@ -39,9 +47,6 @@ fun Application.routes() {
             saveGet("/lesson") {
                 call.respond(lessonRepository.getLessons().map { it.toDto() })
             }
-            saveGet("/student") {
-                call.respond(studentRepository.getStudents().map { it.toDto() })
-            }
             route("/attendance") {
                 saveGet {
                     val start = call.request.queryParameters["start"]?.getLocalDate()
@@ -53,10 +58,33 @@ fun Application.routes() {
                     }
                 }
                 savePost {
+                    if (call.principal<UserIdPrincipal>()?.name != "capitan") {
+                        call.respond(HttpStatusCode.Forbidden)
+                    }
                     val attendance = call.receive<AttendanceDto>().toAttendance()
                     attendanceRepository.addAttendance(attendance)
                     call.respond(HttpStatusCode.OK)
                 }
+            }
+        }
+        saveGet("/auth") {
+            val login =
+                call.request.queryParameters["login"] ?: call.respond(HttpStatusCode.BadRequest, "login not found")
+                    .run { "" }
+            val password = call.request.queryParameters["password"]
+            try {
+                if (authUseCase(login, password)) {
+                    call.respond(HttpStatusCode.OK, System.getenv("APIKEY"))
+                } else {
+                    call.respond(HttpStatusCode.OK, System.getenv("APIKEY").reversed())
+                }
+
+            } catch (e: UserNotFoundException) {
+                call.respond(HttpStatusCode.NotFound, e.message ?: "")
+            } catch (e: RequiredPasswordException) {
+                call.respond(HttpStatusCode.PaymentRequired, e.message ?: "")
+            } catch (e: PasswordException) {
+                call.respond(HttpStatusCode.BadRequest, e.message ?: "")
             }
         }
     }

